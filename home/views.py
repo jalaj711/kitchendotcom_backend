@@ -1,14 +1,14 @@
-from django.http.response import HttpResponse, FileResponse
-from django.http import HttpResponseRedirect
+import json
+from django.http.response import HttpResponse, FileResponse, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 # importing calculation model is removed
 from home.models import City11, City12, City13, Other, c_details, kitchen_details, Constant, City1, City2, City3, City4, City5, City6, City7, City8, City9, City10, TempLink
 from home.forms import KitchenDetailsForm, KitchenImageFormSet, KitchenVideoFormSet
 from datetime import datetime
-from fpdf import FPDF, template
+from fpdf import FPDF
 from django.core.mail import EmailMessage
 from django.conf import settings
-from django.template.loader import render_to_string, get_template
+from django.template.loader import render_to_string
 
 
 values = Constant.objects.all().last()
@@ -69,9 +69,14 @@ def kitchen_price_steps(request):
 
 def select_layout(request):
     if request.method == "POST":
-        layout = request.POST.get('kitchenLayout')
+        data = json.loads(request.body)
+        layout = data.get('kitchenLayout')
+        print(layout)
         request.session['layout'] = layout
-        return redirect('/customer_details')
+        return JsonResponse({
+            'success': True,
+            'next': '/customer-details'
+        })
 
     return render(request, 'select_layout.html')
 
@@ -98,11 +103,11 @@ def customer_details(request):
         c_detail.save()
         if layout == "L-Shaped":
             return redirect('/select_lshape')
-        elif(layout == 'Straight'):
+        elif (layout == 'Straight'):
             return redirect('/select_straight')
-        elif(layout == 'U-Shaped'):
+        elif (layout == 'U-Shaped'):
             return redirect('/select_ushape')
-        elif(layout == 'Parallel'):
+        elif (layout == 'Parallel'):
             return redirect('/select_parallel')
     return render(request, 'customer_details.html')
 
@@ -989,13 +994,13 @@ def customer_form(request, slug):
     temp_link = get_object_or_404(TempLink, link=slug)
     # if(temp_link.date)
     date_diff = (datetime.now().date() - temp_link.date)
-    if(date_diff.days > 2):
+    if (date_diff.days > 2):
         temp_link.delete()
         return HttpResponse('<h1>link expired</h1>')
 
     order_instance = temp_link.kitchen_details
 
-    if(request.method == 'POST'):
+    if (request.method == 'POST'):
         data = KitchenDetailsForm(request.POST, instance=order_instance)
         imgs = KitchenImageFormSet(
             request.POST, request.FILES, instance=order_instance)
