@@ -1,0 +1,120 @@
+{%load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blogs and News</title>
+  <!-- bootstrap CSS only -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous" />
+  <!-- fontawesome icons -->
+  <script src="https://kit.fontawesome.com/fecc50ad8e.js" crossorigin="anonymous"></script>
+
+  <!-- custom css -->
+  <link rel="stylesheet" href="{%static "common/css/style.css"%}">
+  <link rel="stylesheet" href="{%static "common/css/nav.css"%}">
+  <link rel="stylesheet" href="{%static "blogandnews/css/blogandnews.css"%}">
+</head>
+
+<body>
+  <div class="px-4">
+    {% include 'includes/nav.html' %}
+  </div>
+
+  <section id="sec-one" class="row mx-4">
+    {% with blogs|first as blog %}
+    <div class="col-sm-6">
+      <img class="img-fluid" src="/media/{{blog.image}}" alt="{{blog.title}}">
+    </div>
+    <div class="col">
+      <h6 class="text-muted">{{blog.author | upper}} . {{blog.date | timesince}}</h6>
+      <h2>
+        {{blog.title}}
+      </h2>
+      <p>
+        {{blog.content|truncatewords:90|safe}}
+      </p>
+      <a href={% url 'blog' blog.id %} class="btn btn-primary styled-btn">Read More</a>
+    </div>
+    {% endwith %}
+  </section>
+
+  <section id="sec-two" class="row mt-5 mx-4">
+
+    <section id="blogs" class="col-sm-7">
+      <div>
+		  
+		  
+		  <!---old class name is section-title-->
+		  <h1 class=""><u>Blogs</u></h1>
+      </div>
+      <div class="row">
+        {% for blog in blogs %}
+		{% if forloop.first %}
+		{% else %}
+        <div class="col-sm-6 my-4">
+          <div class="blog card">
+            <img class="card-img-top img-fluid" src="/media/{{blog.image}}" alt="{{blog.title}}">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2 text-muted">{{blog.author | upper}} . {{blog.date | timesince}}</h6>
+              <h5 class="card-title">
+                {{blog.title}}
+              </h5>
+              <p class="card-text">
+                {{blog.content|truncatewords:30|safe}}
+              </p>
+              <a href={% url 'blog' blog.id %} class="btn btn-primary styled-btn">Read More</a>
+            </div>
+          </div>
+        </div>
+		{%endif%}
+        {% endfor %}
+
+      </div>
+    </section>
+
+    <section id="news" class="col-sm-5">
+      <div>
+		  
+		  
+		  <!--old class name is section-title-->
+		  <h1 class=""><u>News</u></h1>
+      </div>
+      {% for news in newss %}
+      <div class="news row my-4">
+        <div class="col-4">
+          <img class="img-fluid" src="/media/{{news.image}}" alt="">
+        </div>
+        <div class="col-8">
+          <div class="d-flex justify-content-between">
+            <h4 class="heading">{{news.heading}}</h4>
+            <p class="time text-muted"> {{news.date | timesince}}</p>
+          </div>
+          <p class="content">{{news.content|truncatewords:30|safe }}</p>
+          <div class="news-footer d-flex justify-content-between">
+            <div class="writer">{{news.author}}</div>
+          </div>
+        </div>
+      </div>
+	  {% empty %}
+		<div class="news row my-4">
+			<h4>coming soon</h4>
+      </div>
+      {% endfor %}
+
+    </section>
+
+  </section>
+
+  <div id="decorators"></div>
+
+  {% include 'includes/footer.html' %}
+
+  <script src="{%static "common/js/nav.js"%}"></script>
+</body>
+
+</html>

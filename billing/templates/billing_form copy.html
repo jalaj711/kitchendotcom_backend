@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=2480px, initial-scale=1.0" />
+  <title>Kitchendotcom | Billing</title>
+  <!-- bootstrap CSS only -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous" />
+  {% comment %} fontawesom {% endcomment %}
+    <script src="https://kit.fontawesome.com/fecc50ad8e.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      font-size: 10px;
+    }
+
+    .page-cont {
+      border: 1px solid black;
+    }
+
+    @page {
+      margin: 0;
+      size: letter;
+      /*or width x height 150mm 50mm*/
+    }
+
+    .cell {
+      border: 1px solid black;
+      padding: 1px !important;
+    }
+
+    .col {
+      margin: 0;
+      padding: 0;
+    }
+
+    .row {
+      margin: 0;
+      padding: 0;
+    }
+
+    p {
+      margin: 0;
+      padding: 0;
+    }
+
+    td {
+      border: 1px solid black;
+    }
+    #item-area{
+      counter-reset: rowNumber;
+    }
+    #item-area>tr>th::before{
+      counter-increment: rowNumber;
+      content: counter(rowNumber);
+    }
+  </style>
+</head>
+
+<body>
+  <form method="POST" class="page-cont d-flex flex-column m-2">
+    {% csrf_token %}
+    {% comment %} section one {% endcomment %}
+    <section class="row g-0">
+      <div class="col">
+        {% comment %} ra creators {% endcomment %}
+        <div class="cell">
+          <!-- name -->
+          <p class="fw-bold">
+            <label for="franch_name">Name : </label>
+            <input type="text" value="RAJAT AGRAWAL CREATORS" name="franch_name" id="franch_name">
+          </p>
+          <!-- address -->
+          <p>
+            <label for="franch_address">Address</label>
+            <textarea type="text" value="ASH BHAIRO, VARANASI"  rows="1" name="franch_address" id="franch_address"></textarea>
+          </p>
+          <div class="row g-0">
+            <label for="franch_gst"  class="col">GSTIN/UIN</label>
+            <div class="col">
+              <input type="text" value="09CLEPA9997D1ZQ" name="franch_gst" id="franch_gst">
+            </div>
+          </div>
+          <div class="row g-0">
+            <label for="franch_state" class="col">State Name</label>
+            <div class="col"> 
+            <input type="text" value="Uttar Pradesh" name="franch_state" id="franch_state">
+            </div>
+          </div>
+          <div class="row g-0">
+            <label for="franch_statecode" class="col">State Code :</label>
+            <div class="col">
+              <input type="text" value="09" name="franch_statecode" id="franch_statecode">
+            </div>
+          </div>
+          <div class="row g-0">
+            <label for="franch_mail" class="col">Mail :</label>
+            <div class="col">
+              <input type="text" name="franch_mail" id="franch_mail" value="info@racreators.com">
+            </div>
+          </div>
+        </div>
+        {% comment %} ship to {% endcomment %}
+        <div class="cell">
+          <div class="row g-0">
+            <p>Consignee (Ship to)</p>
+          </div>
+          <!-- name -->
+          <p class="fw-bold">
+            <label for="ship_name">Name : </label>
+            <input type="text" name="ship_name" id="ship_name">
+          </p>
+          <!-- address -->
+          <p>
+            <label for="ship_address">Address</label>
+            <textarea type="text" name="ship_address" id="ship_address" rows="1" > </textarea>
+          </p>
+          <div class="row g-0">
+            <label for="ship_gst" class="col">GSTIN/UIN</label>
+            <div class="col">
+              <input type="text" name="ship_gst" id="ship_gst">
+            </div>
+          </div>
+          <div class="row g-0">
+            <label for="ship_state" class="col">State Name</label>
+            <div class="col"> <input type="text" name="ship_state" id="ship_state">
+            </div>
+          </div>
+          <div class="row g-0">
+            <label for="ship_statecode" class="col">State Code :</label>
+            <div class="col">
+              <input type="text" name="ship_statecode" id="ship_statecode">
+            </div>
+          </div>
+        </div>
+        {% comment %} bill to {% endcomment %}
+        <div class="cell">
+          <div class="row g-0">
+            <p>Buyer (Bill to)</p>
+          </div>
+          <!-- name -->
+          <p class="fw-bold">
+            <label for="bill_name">Name : </label>
+            <input type="text" name="bill_name" id="bill_name">
+          </p>
+          <!-- address -->
+          <p>
+            <label for="bill_address">Address</label>
+            <textarea type="text" name="bill_address" id="bill_address" rows="1" > </textarea>
+          </p>
+          <div class="row g-0">
+            <label for="bill_gst" class="col">GSTIN/UIN</label>
+            <div class="col">
+              <input type="text" name="bill_gst" id="bill_gst">
+            </div>
+          </div>
+          <div class="row g-0">
+            <label for="bill_state" class="col">State Name</label>
+            <div class="col"> <input type="text" name="bill_state" id="bill_state">
+            </div>
+          </div>
+          <div class="row g-0">
+            <label for="bill_statecode" class="col">State Code :</label>
+            <div class="col">
+              <input type="text" name="bill_statecode" id="bill_statecode">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col d-flex flex-column">
+        <div class="row g-0">
+          <div class="col h-100 cell">
+            <label for="invoice_no">Invoice No.</label>
+            <input type="text" name="invoice_no" id="invoice_no">
+          </div>
+          <div class="col h-100 cell">
+            <label for="date">Dated </label>
+            <input type="text" name="date" id="date">
+          </div>
+        </div>
+        <div class="row g-0">
+          <div class="col cell h-100">
+            <label for="delivery_note">Delivery Note</label>
+            <input type="text" name="delivery_note" id="delivery_note">
+          </div>
+          <div class="col cell h-100">
+            <label for="payment_mode">Mode/Terms of Payment</label>
+            <input type="text" name="payment_mode" id="payment_mode">
+          </div>
+        </div>
+        <div class="row g-0">
+          <div class="col cell h-100">
+            <label for="ref_no">Reference No. & Date.</label>
+            <input type="text" name="ref_no" id="ref_no">
+          </div>
+          <div class="col cell h-100">
+            <label for="other_ref">Other References</label>
+            <input type="text" name="other_ref" id="other_ref">
+          </div>
+        </div>
+        <div class="row g-0">
+          <div class="col cell h-100">
+            <label for="buy_ord_no">Buyer's order no</label>
+            <input type="text" name="buy_ord_no" id="buy_ord_no">
+          </div>
+          <div class="col cell h-100">
+            <label for="buy_dated">Dated</label>
+            <input type="text" name="buy_dated" id="buy_dated">
+          </div>
+        </div>
+        <div class="row g-0">
+          <div class="col cell h-100">
+            <label for="dispatch_date">Dispatch Doc No</label>
+            <input type="text" name="dispatch_date" id="dispatch_date">
+          </div>
+          <div class="col cell h-100">
+            <label for="delivery_date">Delivery Note Date</label>
+            <input type="text" name="delivery_date" id="delivery_date">
+          </div>
+        </div>
+        <div class="row g-0">
+          <div class="col cell h-100">
+            <label for="dispatch_through">Dispatched throug</label>
+            <input type="text" name="dispatch_through" id="dispatch_through">
+          </div>
+          <div class="col cell h-100">
+            <label for="destination">Destination</label>
+            <input type="text" name="destination" id="destination">
+          </div>
+        </div>
+        <div class="col cell h-100">
+          <label for="delivery_terms">Terms of delivery</label>
+          <textarea type="text" name="delivery_terms" id="delivery_terms"></textarea>
+        </div>
+      </div>
+    </section>
+
+    {% comment %} table section {% endcomment %}
+    <section class="row g-0 border border-dark">
+      <div class="row text-end">
+        <div class="col text-end">
+          <button class="btn btn-primary m-2" id="add-item" >Add item</button>
+        </div>
+      </div>
+      <table class="cell table table-hover">
+        <thead>
+          <tr>  
+            <th scope="col">SI No.</th>
+            <th scope="col">Description of Service</th>
+            <th scope="col">HSN/SAC</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Rate</th>
+            <th scope="col">per</th>
+          </tr>
+        </thead>
+        <tbody id="item-area" >
+          <!-- <tr>
+            <th scope="row"></th>
+            <td>
+              <input type="text" placeholder="Item Name" name="item" id="item">
+            </td>
+            <td>
+              <input type="text" placeholder="HSN Code" name="hsn" id="hsn">
+            </td>
+            <td>
+              <input type="digit" value="0" placeholder="Quantity" name="quantity" id="quantity">
+            </td>
+            <td>
+              <input type="digit" value="0" placeholder="rate" name="rate" id="rate">
+            </td>
+            <td>
+              <input type="digit" value="1" placeholder="per" name="per" id="per">
+            </td>
+            <td>
+              <button class="btn">
+                <i onclick="deleteRow(event);" class="text-danger fas fa-trash"></i>
+              </button>
+            </td>
+          </tr> -->
+        </tbody>
+      </table>
+    </section>
+
+      <!-- footer -->
+    <section class="row g-0 mt-auto">
+      <div class="col">
+        <div class="row g-0">
+          <p>Remarks :</p>
+          <p>
+            <textarea name="remarks" id="remarks" cols="30" rows="1"></textarea>
+          </p>
+        </div>
+        <div class="row g-0">
+          <p class="fw-undrline">Declaration</p>
+          <p>
+            We declare that this invoice shows the actual price of the goods
+            described and that all particulars are true and correct.
+          </p>
+        </div>
+      </div>
+      <div class="col d-flex flex-column">
+        <div class="cell mt-auto d-flex flex-column" style="height: 50%">
+          <div class="row">
+            <div class="col-auto"><p class="row g-0 fw-bold">for</p></div>
+            <div class="col-auto"> <input type="text" name="for" id="for"> </div>
+          </div>
+          <div class="row">
+            <p class="row g-0 mt-auto">Authorised Signatory</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+      <div class="row text-center p-2 m-2">
+        <div class="col text-center">
+          <button class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+  </form>
+  <script>
+    const itemArea = document.getElementById("item-area")
+    const addItem = document.getElementById("add-item")
+    const newRowContent = `
+            <th scope="row"></th>
+            <td>
+              <input type="text" placeholder="Item Name" name="item" id="item">
+            </td>
+            <td>
+              <input type="text" placeholder="HSN Code" name="hsn" id="hsn">
+            </td>
+            <td>
+              <input type="digit" value="0" placeholder="Quantity" name="quantity" id="quantity">
+            </td>
+            <td>
+              <input type="digit" value="0" placeholder="rate" name="rate" id="rate">
+            </td>
+            <td>
+              <input type="digit" value="1" placeholder="per" name="per" id="per">
+            </td>
+            <td>
+              <i onclick="deleteRow(event);" class="text-danger btn fas fa-trash"></i>
+            </td>
+    `
+    addItem.addEventListener('click', (e)=> addRow(e) )
+    addRow()
+    function addRow(e){
+      e.preventDefault();
+      console.log('clicked')
+      let newRow = itemArea.insertRow()
+      newRow.innerHTML = newRowContent
+      // itemArea.append(newRow)
+    }
+
+    function deleteRow(e){
+      e.preventDefault()
+      console.log(e.target, e.target.parentElement.parentElement)
+      e.target.parentElement.parentElement.remove()
+    }
+  </script>
+</body>
+
+</html>

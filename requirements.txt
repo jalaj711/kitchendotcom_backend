@@ -1,0 +1,13 @@
+asgiref==3.4.1
+crispy-bootstrap5==0.6
+Django==3.2.8
+django-3-jet==1.0.8
+django-ckeditor==6.1.0
+django-crispy-forms==1.13.0
+django-jet==1.0.8
+django-js-asset==1.2.2
+fpdf==1.7.2
+inflect==5.3.0
+pytz==2021.3
+six==1.16.0
+sqlparse==0.4.2

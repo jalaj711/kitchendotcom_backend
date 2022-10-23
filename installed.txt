@@ -1,0 +1,1 @@
+pip 22.0.2 from /home/jalaj/stuffs/projects/kitchendotcom_backend/.venv/lib/python3.10/site-packages/pip (python 3.10)
