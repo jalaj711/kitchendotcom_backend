@@ -77,7 +77,9 @@ def select_layout(request):
             'next': '/customer-details'
         })
 
-    return render(request, 'select_layout.html')
+    response = HttpResponse("Method not allowed", status=405)
+    response["Allow"] = "POST"
+    return response
 
 
 def customer_details(request):
@@ -114,7 +116,9 @@ def customer_details(request):
             'success': True,
             'next': next_page
         })
-    return render(request, 'customer_details.html')
+    response = HttpResponse("Method not allowed", status=405)
+    response["Allow"] = "POST"
+    return response
 
 
 def layout_dimensions(request):
@@ -136,7 +140,9 @@ def layout_dimensions(request):
             'success': True,
             'next': '/select_loft_type'
         })
-    return render(request, 'select_ushape.html')
+    response = HttpResponse("Method not allowed", status=405)
+    response["Allow"] = "POST"
+    return response
 
 
 def select_loft_type(request):
@@ -153,7 +159,9 @@ def select_loft_type(request):
             'success': True,
             'next': '/select_package'
         })
-    return render(request, "select_loft_type.html")
+    response = HttpResponse("Method not allowed", status=405)
+    response["Allow"] = "POST"
+    return response
 
 
 def select_package(request):  # fqname is not confirmed
@@ -191,8 +199,9 @@ def select_package(request):  # fqname is not confirmed
             'next': '/summary'
         })
 
-    # 1.template name is not confirmed
-    return render(request, 'select_package.html')
+    response = HttpResponse("Method not allowed", status=405)
+    response["Allow"] = "POST"
+    return response
 
 
 def select_package_essentials(request):
