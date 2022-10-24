@@ -26,11 +26,8 @@ urlpatterns = [
     path("kitchen_price_steps", views.kitchen_price_steps,
          name='kitchen_price_steps'),
     path("select-layout/", views.select_layout, name='select_layout'),
-    path("customer_details", views.customer_details, name='customer_details'),
-    path("select_lshape", views.lshape, name='select_lshape'),
-    path("select_ushape", views.ushape, name='select_ushape'),
-    path("select_straight", views.straight, name='select_straight'),
-    path("select_parallel", views.parallel, name='select_parallel'),
+    path("customer-details", views.customer_details, name='customer_details'),
+    path("select-dimension", views.layout_dimensions, name='select_lshape'),
     path("select_countertop", views.select_countertop, name='select_countertop'),
     path("select_loft_type", views.select_loft_type,
          name='select_loft_type'),  # might be changed

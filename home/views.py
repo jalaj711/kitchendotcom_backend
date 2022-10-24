@@ -71,7 +71,6 @@ def select_layout(request):
     if request.method == "POST":
         data = json.loads(request.body)
         layout = data.get('kitchenLayout')
-        print(layout)
         request.session['layout'] = layout
         return JsonResponse({
             'success': True,
@@ -88,10 +87,11 @@ def customer_details(request):
     # selected_layout = sizeof(context)
     # print(type(selected_layout))
     if request.method == "POST":
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        phone = request.POST.get('phone')
-        location1 = request.POST.get('location')
+        data = json.loads(request.body)
+        name = data.get('name')
+        email = data.get('email')
+        phone = data.get('phone')
+        location1 = data.get('location')
         # print(location1)
         request.session['name'] = name
         request.session['email'] = email
@@ -101,80 +101,40 @@ def customer_details(request):
         c_detail = c_details(name=name, email=email,
                              phone=phone, location=location1)
         c_detail.save()
+        next_page = ''
         if layout == "L-Shaped":
-            return redirect('/select_lshape')
+            next_page = '/select_lshape'
         elif (layout == 'Straight'):
-            return redirect('/select_straight')
+            next_page = '/select_straight'
         elif (layout == 'U-Shaped'):
-            return redirect('/select_ushape')
+            next_page = '/select_ushape'
         elif (layout == 'Parallel'):
-            return redirect('/select_parallel')
+            next_page = '/select_parallel'
+        return JsonResponse({
+            'success': True,
+            'next': next_page
+        })
     return render(request, 'customer_details.html')
 
-# logic required for rendering selected layout's page
-
-
-def lshape(request):
+def layout_dimensions(request):
     if request.method == "POST":
-        a_feet = request.POST.get('a_feet')
-        a_inch = request.POST.get('a_inch')
-        b_feet = request.POST.get('b_feet')
-        b_inch = request.POST.get('b_inch')
-        request.session['a_feet'] = a_feet
-        request.session['a_inch'] = a_inch
-        request.session['b_feet'] = b_feet
-        request.session['b_inch'] = b_inch
-        request.session['c_feet'] = 0
-        request.session['c_inch'] = 0
-        return redirect('/select_loft_type')
-    return render(request, 'select_lshape.html')
-
-
-def parallel(request):
-    if request.method == "POST":
-        a_feet = request.POST.get('a_feet')
-        a_inch = request.POST.get('a_inch')
-        b_feet = request.POST.get('b_feet')
-        b_inch = request.POST.get('b_inch')
-        request.session['a_feet'] = a_feet
-        request.session['a_inch'] = a_inch
-        request.session['b_feet'] = b_feet
-        request.session['b_inch'] = b_inch
-        request.session['c_feet'] = 0
-        request.session['c_inch'] = 0
-        return redirect('/select_loft_type')
-    return render(request, 'select_parallel.html')
-
-
-def straight(request):
-    if request.method == "POST":
-        a_feet = request.POST.get('a_feet')
-        a_inch = request.POST.get('a_inch')
-        request.session['a_feet'] = a_feet
-        request.session['a_inch'] = a_inch
-        request.session['b_feet'] = 0
-        request.session['b_inch'] = 0
-        request.session['c_feet'] = 0
-        request.session['c_inch'] = 0
-        return redirect('/select_loft_type')
-    return render(request, 'select_straight.html')
-
-
-def ushape(request):
-    if request.method == "POST":
-        a_feet = request.POST.get('a_feet')
-        a_inch = request.POST.get('a_inch')
-        b_feet = request.POST.get('b_feet')
-        b_inch = request.POST.get('b_inch')
-        c_feet = request.POST.get('c_feet')
-        c_inch = request.POST.get('c_inch')
+        data = json.loads(request.body)
+        a_feet = data.get('a_feet')
+        a_inch = data.get('a_inch')
+        b_feet = data.get('b_feet')
+        b_inch = data.get('b_inch')
+        c_feet = data.get('c_feet')
+        c_inch = data.get('c_inch')
         request.session['a_feet'] = a_feet
         request.session['a_inch'] = a_inch
         request.session['b_feet'] = b_feet
         request.session['b_inch'] = b_inch
         request.session['c_feet'] = c_feet
         request.session['c_inch'] = c_inch
-        return redirect('/select_loft_type')
+        return JsonResponse({
+            'success': True,
+            'next': '/select_loft_type'
+        })
     return render(request, 'select_ushape.html')
 
 
