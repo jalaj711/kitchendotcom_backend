@@ -116,6 +116,7 @@ def customer_details(request):
         })
     return render(request, 'customer_details.html')
 
+
 def layout_dimensions(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -141,13 +142,17 @@ def layout_dimensions(request):
 def select_loft_type(request):
 
     if request.method == "POST":
+        data = json.loads(request.body)
         # this keyword depends on template
-        loft1 = request.POST.get('loft_type')
+        loft1 = data.get('loft_type')
         if loft1 == "custom":
-            loft1 = request.POST.get('loft')
+            loft1 = data.get('loft')
             # request.session['loft'] = loft1 # for if condition
         request.session['loft'] = loft1     # for else condition
-        return redirect('/select_package')
+        return JsonResponse({
+            'success': True,
+            'next': '/select_package'
+        })
     return render(request, "select_loft_type.html")
 
 
@@ -156,29 +161,35 @@ def select_package(request):  # fqname is not confirmed
     # to be entered in following 4 function
     if request.method == "POST":
         # "package" <- this name might be different
-        package = request.POST.get('package')
+
+        data = json.loads(request.body)
+        package = data.get('package')
         request.session['package'] = package
 
         if package == "Build your own package":
-            return redirect('/build_package')
+            return JsonResponse({
+                'success': True,
+                'next': '/build_package'
+            })
         if package == "Essentials":
             request.session['material'] = "MR Plywood"
             request.session['finish'] = "Laminate"
             request.session['accessories'] = "Wire Basket"
             request.session['countertop'] = "no"
-            return redirect('/summary')
         if package == "Premium":
             request.session['material'] = "HDHMR"
             request.session['finish'] = "PVC"
             request.session['accessories'] = "Tandem Basket"
             request.session['countertop'] = "no"
-            return redirect('/summary')
         if package == "Luxe":
             request.session['material'] = "HDHMR"
             request.session['finish'] = "Acrylic"
             request.session['accessories'] = "Tandem Basket"
             request.session['countertop'] = "no"
-            return redirect('/summary')
+        return JsonResponse({
+            'success': True,
+            'next': '/summary'
+        })
 
     # 1.template name is not confirmed
     return render(request, 'select_package.html')
