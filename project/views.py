@@ -1,6 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, render
-from project.models import Project, PostImage, Video, Design, Feedback
+from project.models import Project, Video, Design, Feedback
 
 # Create your views here.
 

@@ -40,14 +40,20 @@ def landing_page(request):
 
 def contact_us(request):
     if request.method == "POST":
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        location = request.POST.get('cities')
-        message = request.POST.get('message')
+        data = json.loads(request.body)
+        name = data.get('first_name') + " " + data.get('last_name')
+        email = data.get('email')
+        location = data.get('city')
+        message = data.get('message')
         details = c_details(name=name, email=email,
                             location=location, message=message)
         details.save()
-    return render(request, "contact_us.html")
+        return JsonResponse({
+            'success': True
+        })
+    response = HttpResponse("Method not allowed", status=405)
+    response["Allow"] = "POST"
+    return response
 
 
 def about_us(request):
