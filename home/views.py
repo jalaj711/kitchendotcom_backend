@@ -209,176 +209,33 @@ def select_package(request):  # fqname is not confirmed
     response["Allow"] = "POST"
     return response
 
-
-def select_package_essentials(request):
-    if request.method == "POST":
-        # "package" <- this name might be different
-        package = request.POST.get('package')
-        request.session['package'] = package
-
-        if package == "Build your own package":
-            return redirect('/build_package')
-        if package == "Essentials":
-            request.session['material'] = "MR Plywood"
-            request.session['finish'] = "Laminate"
-            request.session['accessories'] = "Wire Basket"
-            request.session['countertop'] = "no"
-            return redirect('/summary')
-        if package == "Premium":
-            request.session['material'] = "HDHMR"
-            request.session['finish'] = "PVC"
-            request.session['accessories'] = "Tandem Basket"
-            request.session['countertop'] = "no"
-            return redirect('/summary')
-        if package == "Luxe":
-            request.session['material'] = "HDHMR"
-            request.session['finish'] = "Acrylic"
-            request.session['accessories'] = "Tandem Basket"
-            request.session['countertop'] = "no"
-            return redirect('/summary')
-
-    return render(request, 'select_package_essentials.html')
-
-
-def select_package_luxe(request):
-    if request.method == "POST":
-        # "package" <- this name might be different
-        package = request.POST.get('package')
-        request.session['package'] = package
-
-        if package == "Build your own package":
-            return redirect('/build_package')
-        if package == "Essentials":
-            request.session['material'] = "MR Plywood"
-            request.session['finish'] = "Laminate"
-            request.session['accessories'] = "Wire Basket"
-            request.session['countertop'] = "no"
-            return redirect('/summary')
-        if package == "Premium":
-            request.session['material'] = "HDHMR"
-            request.session['finish'] = "PVC"
-            request.session['accessories'] = "Tandem Basket"
-            request.session['countertop'] = "no"
-            return redirect('/summary')
-        if package == "Luxe":
-            request.session['material'] = "HDHMR"
-            request.session['finish'] = "Acrylic"
-            request.session['accessories'] = "Tandem Basket"
-            request.session['countertop'] = "no"
-            return redirect('/summary')
-
-    return render(request, 'select_package_luxe.html')
-
-
-def select_package_premium(request):
-    if request.method == "POST":
-        # "package" <- this name might be different
-        package = request.POST.get('package')
-        request.session['package'] = package
-
-        if package == "Build your own package":
-            return redirect('/build_package')
-        if package == "Essentials":
-            request.session['material'] = "MR Plywood"
-            request.session['finish'] = "Laminate"
-            request.session['accessories'] = "Wire Basket"
-            request.session['countertop'] = "no"
-            return redirect('/summary')
-        if package == "Premium":
-            request.session['material'] = "HDHMR"
-            request.session['finish'] = "PVC"
-            request.session['accessories'] = "Tandem Basket"
-            request.session['countertop'] = "no"
-            return redirect('/summary')
-        if package == "Luxe":
-            request.session['material'] = "HDHMR"
-            request.session['finish'] = "Acrylic"
-            request.session['accessories'] = "Tandem Basket"
-            request.session['countertop'] = "no"
-            return redirect('/summary')
-
-    return render(request, 'select_package_premium.html')
-
-
-def select_package_buildpkg(request):
-    if request.method == "POST":
-        # "package" <- this name might be different
-        package = request.POST.get('package')
-        request.session['package'] = package
-
-        if package == "Build your own package":
-            return redirect('/build_package')
-        else:
-            request.session['countertop'] = "No"
-            if package == "Essentials":
-                request.session['material'] = "MR Plywood"
-                request.session['finish'] = "Laminate"
-                request.session['accessories'] = "Wire Basket"
-                request.session['countertop'] = "no"
-                return redirect('/summary')
-            if package == "Premium":
-                request.session['material'] = "HDHMR"
-                request.session['finish'] = "PVC"
-                request.session['accessories'] = "Tandem Basket"
-                request.session['countertop'] = "no"
-                return redirect('/summary')
-            if package == "Luxe":
-                request.session['material'] = "HDHMR"
-                request.session['finish'] = "Acrylic"
-                request.session['accessories'] = "Tandem Basket"
-                request.session['countertop'] = "no"
-                return redirect('/summary')
-
-    return render(request, 'select_package_buildpkg.html')
-
-
 def build_package(request):
     if request.method == "POST":
-        material = request.POST.get('ownpackage')
+        data = json.loads(request.body)
+        material = data.get('ownpackage')
         request.session['material'] = material
-        return redirect('/select_countertop')
-    return render(request, 'build_package.html')
+        return JsonResponse({
+            'success': True,
+            'next': '/select_countertop'
+        })
 
-
-def build_package_hdhmr(request):
-    if request.method == "POST":
-        material = request.POST.get('ownpackage')
-        request.session['material'] = material
-        return redirect('/select_countertop')
-    return render(request, 'build_package_hdhmr.html')
-
-
-def build_package_mrply(request):
-    if request.method == "POST":
-        material = request.POST.get('ownpackage')
-        request.session['material'] = material
-        return redirect('/select_countertop')
-    return render(request, 'build_package_mrply.html')
-
-
-def build_package_bwrply(request):
-    if request.method == "POST":
-        material = request.POST.get('ownpackage')
-        request.session['material'] = material
-        return redirect('/select_countertop')
-    return render(request, 'build_package_bwrply.html')
-
-
-def build_package_bwpply(request):
-    if request.method == "POST":
-        material = request.POST.get('ownpackage')
-        request.session['material'] = material
-        return redirect('/select_countertop')
-    return render(request, 'build_package_bwpply.html')
-
+    response = HttpResponse("Method not allowed", status=405)
+    response["Allow"] = "POST"
+    return response
 
 def select_countertop(request):
     if request.method == "POST":
-        c_top = request.POST.get('countertop')
+        data = json.loads(request.body)
+        c_top = data.get('countertop')
         request.session['countertop'] = c_top
-        return redirect('/select_finish')
-    return render(request, 'select_countertop.html')
+        return JsonResponse({
+            'success': True,
+            'next': '/select_finish'
+        })
 
+    response = HttpResponse("Method not allowed", status=405)
+    response["Allow"] = "POST"
+    return response
 
 def select_finish(request):
     if request.method == "POST":
@@ -388,7 +245,9 @@ def select_finish(request):
             'success': True,
             'next': '/estimator/select-accessories'
         })
-    return render(request, 'select_finish.html')
+    response = HttpResponse("Method not allowed", status=405)
+    response["Allow"] = "POST"
+    return response
 
 
 def select_accessories(request):
@@ -400,7 +259,9 @@ def select_accessories(request):
             'success': True,
             'next': '/estimator/select-services'
         })
-    return render(request, 'select_accessories.html')
+    response = HttpResponse("Method not allowed", status=405)
+    response["Allow"] = "POST"
+    return response
 
 def select_services(request):
     if request.method == "POST":
@@ -411,7 +272,9 @@ def select_services(request):
             'success': True,
             'next': '/estimator/select-appliances'
         })
-    return render(request, 'select_services.html')
+    response = HttpResponse("Method not allowed", status=405)
+    response["Allow"] = "POST"
+    return response
 
 
 def select_appliances(request):
@@ -424,7 +287,9 @@ def select_appliances(request):
             'success': True,
             'next': '/summary/buildpkg'
         })
-    return render(request, 'select_appliances.html')
+    response = HttpResponse("Method not allowed", status=405)
+    response["Allow"] = "POST"
+    return response
 
 
 def kitchen_summary(request):
