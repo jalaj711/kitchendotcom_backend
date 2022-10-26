@@ -111,13 +111,13 @@ def customer_details(request):
         c_detail.save()
         next_page = ''
         if layout == "L-Shaped":
-            next_page = '/select_lshape'
+            next_page = '/estimator/select-dimensions/l-shape'
         elif (layout == 'Straight'):
-            next_page = '/select_straight'
+            next_page = '/estimator/select-dimensions/straight-shape'
         elif (layout == 'U-Shaped'):
-            next_page = '/select_ushape'
+            next_page = '/estimator/select-dimensions/u-shape'
         elif (layout == 'Parallel'):
-            next_page = '/select_parallel'
+            next_page = '/estimator/select-dimensions/prallel-shape'
         return JsonResponse({
             'success': True,
             'next': next_page
@@ -382,90 +382,48 @@ def select_countertop(request):
 
 def select_finish(request):
     if request.method == "POST":
-        f = request.POST.get('finish')
-        request.session['finish'] = f
-        return redirect('/select_accessories')
+        data = json.loads(request.body)
+        request.session['finish'] = data.get('finish')
+        return JsonResponse({
+            'success': True,
+            'next': '/estimator/select-accessories'
+        })
     return render(request, 'select_finish.html')
-
-
-def select_finish_laminate(request):
-    if request.method == "POST":
-        f = request.POST.get('finish')
-        request.session['finish'] = f
-        return redirect('/select_accessories')
-    return render(request, 'select_finish_laminate.html')
-
-
-def select_finish_pvclaminate(request):
-    if request.method == "POST":
-        f = request.POST.get('finish')
-        request.session['finish'] = f
-        return redirect('/select_accessories')
-    return render(request, 'select_finish_pvclaminate.html')
-
-
-def select_finish_asacrylic(request):
-    if request.method == "POST":
-        f = request.POST.get('finish')
-        request.session['finish'] = f
-        return redirect('/select_accessories')
-    return render(request, 'select_finish_asacrylic.html')
-
-
-def select_finish_glossypu(request):
-    if request.method == "POST":
-        f = request.POST.get('finish')
-        request.session['finish'] = f
-        return redirect('/select_accessories')
-    return render(request, 'select_finish_glossypu.html')
 
 
 def select_accessories(request):
     if request.method == "POST":
-        acc = request.POST.get('accessories')
+        data = json.loads(request.body)
+        acc = data.get('accessories')
         request.session['accessories'] = acc
-        return redirect('/select_services')
+        return JsonResponse({
+            'success': True,
+            'next': '/estimator/select-services'
+        })
     return render(request, 'select_accessories.html')
-
-
-def select_accessories_basic(request):
-    if request.method == "POST":
-        acc = request.POST.get('accessories')
-        request.session['accessories'] = acc
-        return redirect('/select_services')
-    return render(request, 'select_accessories_basic.html')
-
-
-def select_accessories_intermediate(request):
-    if request.method == "POST":
-        acc = request.POST.get('accessories')
-        request.session['accessories'] = acc
-        return redirect('/select_services')
-    return render(request, 'select_accessories_intermediate.html')
-
-
-def select_accessories_premium(request):
-    if request.method == "POST":
-        acc = request.POST.get('accessories')
-        request.session['accessories'] = acc
-        return redirect('/select_services')
-    return render(request, 'select_accessories_premium.html')
-
 
 def select_services(request):
     if request.method == "POST":
-        services_list = request.POST.getlist('service[]')
+        data = json.loads(request.body)
+        services_list = data.get('services')
         request.session['services'] = services_list
-        return redirect('/select_appliances')
+        return JsonResponse({
+            'success': True,
+            'next': '/estimator/select-appliances'
+        })
     return render(request, 'select_services.html')
 
 
 def select_appliances(request):
     if request.method == "POST":
-        app_list = request.POST.getlist('appliance[]')
+        data = json.loads(request.body)
+        app_list = data.get('appliances')
         # print(app_list)
         request.session['appliances'] = app_list
-        return redirect('/summary/buildpkg')
+        return JsonResponse({
+            'success': True,
+            'next': '/summary/buildpkg'
+        })
     return render(request, 'select_appliances.html')
 
 
