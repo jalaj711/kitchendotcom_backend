@@ -27,7 +27,7 @@ urlpatterns = [
          name='kitchen_price_steps'),
     path("select-layout/", views.select_layout, name='select_layout'),
     path("customer-details/", views.customer_details, name='customer_details'),
-    path("select-dimension/", views.layout_dimensions, name='select_lshape'),
+    path("select-dimensions/", views.layout_dimensions, name='select_lshape'),
     path("select-countertop/", views.select_countertop, name='select_countertop'),
     path("select-loft-type/", views.select_loft_type,
          name='select_loft_type'),  # might be changed

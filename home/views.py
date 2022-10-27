@@ -80,7 +80,7 @@ def select_layout(request):
         request.session['layout'] = layout
         return JsonResponse({
             'success': True,
-            'next': '/customer-details'
+            'next': '/estimator/customer-details'
         })
 
     response = HttpResponse("Method not allowed", status=405)
@@ -117,7 +117,7 @@ def customer_details(request):
         elif (layout == 'U-Shaped'):
             next_page = '/estimator/select-dimensions/u-shape'
         elif (layout == 'Parallel'):
-            next_page = '/estimator/select-dimensions/prallel-shape'
+            next_page = '/estimator/select-dimensions/parallel-shape'
         return JsonResponse({
             'success': True,
             'next': next_page
@@ -144,7 +144,7 @@ def layout_dimensions(request):
         request.session['c_inch'] = c_inch
         return JsonResponse({
             'success': True,
-            'next': '/select_loft_type'
+            'next': '/estimator/select-loft-type'
         })
     response = HttpResponse("Method not allowed", status=405)
     response["Allow"] = "POST"
@@ -155,15 +155,11 @@ def select_loft_type(request):
 
     if request.method == "POST":
         data = json.loads(request.body)
-        # this keyword depends on template
-        loft1 = data.get('loft_type')
-        if loft1 == "custom":
-            loft1 = data.get('loft')
-            # request.session['loft'] = loft1 # for if condition
-        request.session['loft'] = loft1     # for else condition
+        loft1 = data.get('loft')
+        request.session['loft'] = loft1
         return JsonResponse({
             'success': True,
-            'next': '/select_package'
+            'next': '/select-package'
         })
     response = HttpResponse("Method not allowed", status=405)
     response["Allow"] = "POST"
