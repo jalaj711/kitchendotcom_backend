@@ -37,7 +37,7 @@ urlpatterns = [
     path("select-accessories/", views.select_accessories, name='select_accessories'),
     path("select-appliances/", views.select_appliances, name='select_appliances'),
     path("select-services/", views.select_services, name='select_services'),
-    path("summary", views.kitchen_summary, name='kitchen_summary'),
+    path("summary/", views.kitchen_summary, name='kitchen_summary'),
     path("summary_download", views.summary_download, name='summary_download'),
     path("summary/buildpkg", views.kitchen_summary_buildpkg,
          name='kitchen_summary_buildpkg'),

@@ -131,11 +131,12 @@ def layout_dimensions(request):
     if request.method == "POST":
         data = json.loads(request.body)
         a_feet = data.get('a_feet')
-        a_inch = data.get('a_inch')
+        a_inch = data.get('a_inches')
         b_feet = data.get('b_feet')
-        b_inch = data.get('b_inch')
+        b_inch = data.get('b_inches')
         c_feet = data.get('c_feet')
-        c_inch = data.get('c_inch')
+        c_inch = data.get('c_inches')
+        print(a_feet, a_inch, b_feet, b_inch)
         request.session['a_feet'] = a_feet
         request.session['a_inch'] = a_inch
         request.session['b_feet'] = b_feet
@@ -156,10 +157,10 @@ def select_loft_type(request):
     if request.method == "POST":
         data = json.loads(request.body)
         loft1 = data.get('loft')
-        request.session['loft'] = loft1
+        request.session['loft'] = str(loft1)
         return JsonResponse({
             'success': True,
-            'next': '/select-package'
+            'next': '/estimator/select-package'
         })
     response = HttpResponse("Method not allowed", status=405)
     response["Allow"] = "POST"
@@ -176,10 +177,10 @@ def select_package(request):  # fqname is not confirmed
         package = data.get('package')
         request.session['package'] = package
 
-        if package == "Build your own package":
+        if package == "Build your own":
             return JsonResponse({
                 'success': True,
-                'next': '/build_package'
+                'next': '/estimator/build-package'
             })
         if package == "Essentials":
             request.session['material'] = "MR Plywood"
@@ -205,33 +206,36 @@ def select_package(request):  # fqname is not confirmed
     response["Allow"] = "POST"
     return response
 
+
 def build_package(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        material = data.get('ownpackage')
+        material = data.get('package')
         request.session['material'] = material
         return JsonResponse({
             'success': True,
-            'next': '/select_countertop'
+            'next': '/estimator/select-countertop'
         })
 
     response = HttpResponse("Method not allowed", status=405)
     response["Allow"] = "POST"
     return response
+
 
 def select_countertop(request):
     if request.method == "POST":
         data = json.loads(request.body)
         c_top = data.get('countertop')
-        request.session['countertop'] = c_top
+        request.session['countertop'] = "yes" if c_top else "no"
         return JsonResponse({
             'success': True,
-            'next': '/select_finish'
+            'next': '/estimator/select-finish'
         })
 
     response = HttpResponse("Method not allowed", status=405)
     response["Allow"] = "POST"
     return response
+
 
 def select_finish(request):
     if request.method == "POST":
@@ -258,6 +262,7 @@ def select_accessories(request):
     response = HttpResponse("Method not allowed", status=405)
     response["Allow"] = "POST"
     return response
+
 
 def select_services(request):
     if request.method == "POST":
@@ -363,8 +368,8 @@ def kitchen_summary(request):
 
     pdf = FPDF()
     pdf.add_page()
-    pdf.image("static/pdf/bg_1.png", 0, 0, 210, 297, 'png')  # Background image
-    pdf.image("static/pdf/Group.png", 100, 10)  # logo
+    # pdf.image("static/pdf/bg_1.png", 0, 0, 210, 297, 'png')  # Background image
+    # pdf.image("static/pdf/Group.png", 100, 10)  # logo
     pdf.set_text_color(0, 102, 101)
     pdf.set_font("Arial", size=20)
     pdf.cell(190, 40, "Kitchendotcom", ln=1, align="C")
@@ -434,7 +439,7 @@ def kitchen_summary(request):
         200, 4, "6. Payment Schedule as prescribed by area manager.", ln=1, align="L")
 
     pdf.add_page()
-    pdf.image("static/pdf/bg_2.png", 0, 0, 210, 297, 'png')
+    ##pdf.image("static/pdf/bg_2.png", 0, 0, 210, 297, 'png')
     pdf.set_font("Arial", size=15)
     pdf.set_text_color(0, 0, 0)
     pdf.cell(190, 15, "Summary", ln=1, align="C")
@@ -522,19 +527,21 @@ def kitchen_summary(request):
     pdf.output(name=file_name)
 
     # os.remove(file_name)
-    template = render_to_string('email_template.html', {
-                                'name': request.session.get('name')})
-    email = EmailMessage(
-        'Modular Kitchen Estimate',
-        template,
-        settings.EMAIL_HOST_USER,
-        [request.session.get('email')]
-    )
-    # name = request.session.get('name') + '_KichenEstimate.pdf'
-    email.attach_file(file_name)
-    email.fail_silently = True
+    # template = render_to_string('email_template.html', {
+    #                             'name': request.session.get('name')})
+    # email = EmailMessage(
+    #     'Modular Kitchen Estimate',
+    #     template,
+    #     settings.EMAIL_HOST_USER,
+    #     [request.session.get('email')]
+    # )
+    # # name = request.session.get('name') + '_KichenEstimate.pdf'
+    # email.attach_file(file_name)
+    # email.fail_silently = True
     # email.send()
-    return render(request, 'kitchen_summary.html', {'context': context})
+    return JsonResponse({
+        'data': context
+    })
 
 
 def kitchen_summary_buildpkg(request):
@@ -618,8 +625,8 @@ def kitchen_summary_buildpkg(request):
     # Pdf generating script
     pdf = FPDF()
     pdf.add_page()
-    pdf.image("static/pdf/bg_1.png", 0, 0, 210, 297, 'png')  # Background image
-    pdf.image("static/pdf/Group.png", 100, 10)  # logo
+    # pdf.image("static/pdf/bg_1.png", 0, 0, 210, 297, 'png')  # Background image
+    # pdf.image("static/pdf/Group.png", 100, 10)  # logo
     pdf.set_text_color(0, 102, 101)
     pdf.set_font("Arial", size=20)
     pdf.cell(190, 40, "Kitchendotcom", ln=1, align="C")
@@ -690,7 +697,7 @@ def kitchen_summary_buildpkg(request):
         200, 4, "6. Payment Schedule as prescribed by area manager.", ln=1, align="L")
 
     pdf.add_page()
-    pdf.image("static/pdf/bg_2.png", 0, 0, 210, 297, 'png')
+    #pdf.image("static/pdf/bg_2.png", 0, 0, 210, 297, 'png')
     pdf.set_font("Arial", size=15)
     pdf.set_text_color(0, 0, 0)
     pdf.cell(190, 15, "Summary", ln=1, align="C")
