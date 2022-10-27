@@ -13,7 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import os
 from django.contrib import admin
+from django.shortcuts import render
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
@@ -24,13 +26,16 @@ admin.site.site_header = "Kitchendotcom Admin"
 admin.site.site_title = "Kitchendotcom Admin Portal"
 admin.site.index_title = "Welcome to Kitchendotcom Portal"
 
+def landing_page(request):
+    return render(request, 'index.html')
 
 urlpatterns = [
-    path('', include('home.urls')),
+    path('', landing_page),
+    path('backend/', include('home.urls')),
     #path('jet/', include('jet.urls', 'jet')),
     #path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     path('admin/', admin.site.urls),
-    path('projects/', include('project.urls')),
+    path('backend/projects/', include('project.urls')),
     path('blogandnews/', include('blogandnews.urls')),
     path('billing/', include('billing.urls')),
 ]

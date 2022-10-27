@@ -18,13 +18,7 @@ from django.urls import path
 from home import views
 
 urlpatterns = [
-    path("", views.landing_page, name='home'),
     path("contact-us/", views.contact_us, name="contact_us"),
-    path("aboutus/", views.about_us, name="about_us"),
-    # path("project_gallery", views.project_gallery, name='project_gallery'),
-    path("design_gallery", views.design_gallery, name='design_gallery'),
-    path("kitchen_price_steps", views.kitchen_price_steps,
-         name='kitchen_price_steps'),
     path("select-layout/", views.select_layout, name='select_layout'),
     path("customer-details/", views.customer_details, name='customer_details'),
     path("select-dimensions/", views.layout_dimensions, name='select_lshape'),
@@ -38,8 +32,6 @@ urlpatterns = [
     path("select-appliances/", views.select_appliances, name='select_appliances'),
     path("select-services/", views.select_services, name='select_services'),
     path("summary/", views.kitchen_summary, name='kitchen_summary'),
-    path("summary_download", views.summary_download, name='summary_download'),
-    path("summary/buildpkg", views.kitchen_summary_buildpkg,
-         name='kitchen_summary_buildpkg'),
+    path("summary-download/", views.summary_download, name='summary_download'),
     path("custormerform/<str:slug>", views.customer_form, name='customer_form'),
 ]
