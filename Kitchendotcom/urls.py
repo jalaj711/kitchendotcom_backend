@@ -26,11 +26,8 @@ admin.site.site_header = "Kitchendotcom Admin"
 admin.site.site_title = "Kitchendotcom Admin Portal"
 admin.site.index_title = "Welcome to Kitchendotcom Portal"
 
-def landing_page(request):
-    return render(request, 'index.html')
-
 urlpatterns = [
-    path('', landing_page),
+    path('', include('templates_app.urls')),
     path('backend/', include('home.urls')),
     #path('jet/', include('jet.urls', 'jet')),
     #path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),

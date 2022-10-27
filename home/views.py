@@ -176,7 +176,7 @@ def select_package(request):  # fqname is not confirmed
             request.session['countertop'] = "no"
         return JsonResponse({
             'success': True,
-            'next': '/summary'
+            'next': '/estimator/summary'
         })
 
     response = HttpResponse("Method not allowed", status=405)
