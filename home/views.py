@@ -217,7 +217,8 @@ def select_countertop(request):
 def select_finish(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        request.session['finish'] = data.get('finish')
+        #TODO: Rename this to finish
+        request.session['finish'] = data.get('accessories')
         return JsonResponse({
             'success': True,
             'next': '/estimator/select-accessories'
@@ -263,7 +264,7 @@ def select_appliances(request):
         request.session['appliances'] = app_list
         return JsonResponse({
             'success': True,
-            'next': '/summary/buildpkg'
+            'next': '/estimator/summary'
         })
     response = HttpResponse("Method not allowed", status=405)
     response["Allow"] = "POST"
@@ -285,6 +286,7 @@ def kitchen_summary(request):
         'b_inch': request.session.get('b_inch'),
         'c_feet': request.session.get('c_feet'),
         'c_inch': request.session.get('c_inch'),
+        'countertop': request.session.get('countertop'),
         # 'name': request.session.get('name'),
         'loft': request.session.get('loft'),
         'type': request.session.get('package'),
@@ -303,8 +305,20 @@ def kitchen_summary(request):
     l = int(context['loft'])
 
     # last value should be fetched from mode
-    cal = round(((a+b+c) * (3+l) * rate['1'][context['type']]), 2)
-    pdf_variable = rate['1'][context['type']]
+    if context['type'] == "Build your own":
+        if context['countertop'] == "Yes":
+            cal = round(((a+b+c) * (3+l) * (rate[context['material']] + rate[context['finish']
+                                                                            ] + rate[context['accessories']]) + rate[context['countertop']]), 2)
+            pdf_variable = (rate[context['material']]+rate[context['finish']] +
+                            rate[context['accessories']] + rate[context['countertop']])
+        else:
+            cal = round(((a+b+c) * (3+l) * (rate[context['material']] +
+                        rate[context['finish']] + rate[context['accessories']])), 2)
+            pdf_variable = (rate[context['material']] +
+                            rate[context['finish']] + rate[context['accessories']])
+    else:
+        cal = round(((a+b+c) * (3+l) * rate['1'][context['type']]), 2)
+        pdf_variable = rate['1'][context['type']]
     # Calculation part ends
     size = str(round(a, 2)) + "ft x " + str(round(b, 2)) + \
         "ft x " + str(round(c, 2)) + "ft"

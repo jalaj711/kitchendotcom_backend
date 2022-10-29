@@ -23,6 +23,10 @@ def design_gallery(request):
     return render(request, "design-gallery.html")
 
 
+def blog(request):
+    return render(request, "blog.html")
+
+
 def estimator(request):
     return render(request, "estimator.html")
 
@@ -141,6 +145,7 @@ def estimator_select_services(request):
 
 def estimator_select_appliances(request):
     return render(request, "estimator/select-appliances.html")
+
 
 def estimator_summary(request):
     return render(request, "estimator/summary.html")

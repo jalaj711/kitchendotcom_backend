@@ -33,7 +33,7 @@ urlpatterns = [
     #path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     path('admin/', admin.site.urls),
     path('backend/projects/', include('project.urls')),
-    path('blogandnews/', include('blogandnews.urls')),
+    path('backend/blogandnews/', include('blogandnews.urls')),
     path('billing/', include('billing.urls')),
 ]
 

@@ -1,12 +1,19 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Blog, News, BlogComment
+from django.http import JsonResponse
 # Create your views here.
 
 
+def serialize(obj):
+    dictionary = obj.__dict__
+    dictionary.pop('_state', None)
+    return dictionary
+
 def blogandnews(request):
-    blogs = Blog.objects.all()
-    newss = News.objects.all()
-    return render(request, "blogandnews.html", {
+    blogs = [serialize(blog) for blog in Blog.objects.all()]
+    newss = [serialize(news) for news in News.objects.all()]
+    print(blogs, newss)
+    return JsonResponse({
         'blogs': blogs,
         'newss': newss,
     })
