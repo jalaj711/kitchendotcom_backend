@@ -26,6 +26,8 @@ def design_gallery(request):
 def blog(request):
     return render(request, "blog.html")
 
+def blog_single(request, blogId):
+    return render(request, "blog/[id].html")
 
 def estimator(request):
     return render(request, "estimator.html")

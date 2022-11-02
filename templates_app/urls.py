@@ -24,6 +24,8 @@ urlpatterns = [
     path("project-gallery", views.project_gallery, name="project_gallery"),
     path("design-gallery", views.design_gallery, name="design_gallery"),
     path("blog", views.blog, name="blog"),
+    path("blog/<int:blogId>", views.blog_single, name="blog_single"),
+    path("blog/<int:blogId>/", views.blog_single, name="blog_single2"),
     path("estimator", views.estimator, name="estimator"),
     path("estimator/select-layout", views.estimator_select_layout,
          name="estimator_select_layout"),
