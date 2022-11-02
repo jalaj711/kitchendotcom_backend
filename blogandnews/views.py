@@ -43,13 +43,14 @@ def blog_like(request, blogId):
 def comments(request, blogId):
     if request.method == "POST":
         data = json.loads(request.body)
-        comment = data.get("comment")
-        mail = data.get("mail")
+        comment = data.get("content")
+        mail = data.get("email")
         blog = Blog.objects.get(id=blogId)
 
         comment = BlogComment(comment=comment, blog=blog, mail=mail)
         comment.save()
 
     return JsonResponse({
-        'success': True
+        'success': True,
+        'n_comments': [serialize(comment) for comment in BlogComment.objects.filter(blog=blogId)]
     })
