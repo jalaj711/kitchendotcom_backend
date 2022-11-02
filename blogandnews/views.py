@@ -1,6 +1,7 @@
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404
 from .models import Blog, News, BlogComment
 from django.http import JsonResponse
+import json
 # Create your views here.
 
 
@@ -9,10 +10,10 @@ def serialize(obj):
     dictionary.pop('_state', None)
     return dictionary
 
+
 def blogandnews(request):
     blogs = [serialize(blog) for blog in Blog.objects.all()]
     newss = [serialize(news) for news in News.objects.all()]
-    print(blogs, newss)
     return JsonResponse({
         'blogs': blogs,
         'newss': newss,
@@ -21,9 +22,11 @@ def blogandnews(request):
 
 def blog(request, blogId):
     blog = get_object_or_404(Blog, id=blogId)
-    comments = BlogComment.objects.filter(blog=blog)
-    context = {'blog': blog, 'comments': comments}
-    return render(request, 'blog.html', context)
+    comments = BlogComment.objects.filter(blog=blogId)
+    return JsonResponse({
+        'blog': serialize(blog),
+        'comments': [serialize(comment) for comment in comments]
+    })
 
 
 def blog_like(request, blogId):
@@ -31,16 +34,22 @@ def blog_like(request, blogId):
     blog.likes = blog.likes + 1
     blog.save()
 
-    return redirect("blog", blogId=blogId)
+    return JsonResponse({
+        'success': True,
+        'n_likes': blog.likes,
+    })
 
 
 def comments(request, blogId):
     if request.method == "POST":
-        comment = request.POST.get("comment")
-        mail = request.POST.get("mail")
+        data = json.loads(request.body)
+        comment = data.get("comment")
+        mail = data.get("mail")
         blog = Blog.objects.get(id=blogId)
 
         comment = BlogComment(comment=comment, blog=blog, mail=mail)
         comment.save()
 
-    return redirect("blog", blogId=blogId)  # to be changed
+    return JsonResponse({
+        'success': True
+    })
