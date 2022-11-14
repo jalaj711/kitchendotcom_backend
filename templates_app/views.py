@@ -66,7 +66,7 @@ def estimator_select_package(request):
 
 
 def estimator_select_package_essentials(request):
-    return render(request, "estimator/select-packageessentials.html")
+    return render(request, "estimator/select-package/essentials.html")
 
 
 def estimator_select_package_premium(request):
