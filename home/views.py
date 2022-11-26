@@ -1,4 +1,5 @@
 import json
+import os
 from django.http.response import HttpResponse, FileResponse, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 # importing calculation model is removed
@@ -33,6 +34,7 @@ rate = {
 
 # Your views here
 
+
 def contact_us(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -49,6 +51,7 @@ def contact_us(request):
     response = HttpResponse("Method not allowed", status=405)
     response["Allow"] = "POST"
     return response
+
 
 def select_layout(request):
     if request.method == "POST":
@@ -217,7 +220,7 @@ def select_countertop(request):
 def select_finish(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        #TODO: Rename this to finish
+        # TODO: Rename this to finish
         request.session['finish'] = data.get('accessories')
         return JsonResponse({
             'success': True,
@@ -308,7 +311,7 @@ def kitchen_summary(request):
     if context['type'] == "Build your own":
         if context['countertop'] == "Yes":
             cal = round(((a+b+c) * (3+l) * (rate[context['material']] + rate[context['finish']
-                                                                            ] + rate[context['accessories']]) + rate[context['countertop']]), 2)
+                                                                             ] + rate[context['accessories']]) + rate[context['countertop']]), 2)
             pdf_variable = (rate[context['material']]+rate[context['finish']] +
                             rate[context['accessories']] + rate[context['countertop']])
         else:
@@ -359,47 +362,75 @@ def kitchen_summary(request):
 
     pdf = FPDF()
     pdf.add_page()
-    # pdf.image("static/pdf/bg_1.png", 0, 0, 210, 297, 'png')  # Background image
+    pdf.image(os.path.join(settings.BASE_DIR, "home", "bg",
+              "page1.png"), 0, 0, 210, 70, 'png')  # Background image
     # pdf.image("static/pdf/Group.png", 100, 10)  # logo
-    pdf.set_text_color(0, 102, 101)
-    pdf.set_font("Arial", size=20)
-    pdf.cell(190, 40, "Kitchendotcom", ln=1, align="C")
 
-    pdf.set_text_color(0, 0, 0)
+    pdf.image(os.path.join(settings.BASE_DIR, "home", "bg",
+              "logo.png"), 30, 23)  # Background image
+    pdf.set_text_color(255, 255, 255)
+    pdf.set_font("Arial", size=25)
+    pdf.ln(11)
+    pdf.cell(190, 40, "Kitchendotcom", ln=1, align="L")
+    pdf.ln(18)
+
+    pdf.set_font("Arial", size=10)
+
+    pdf.set_text_color(100, 100, 100)
     pdf.set_font("Arial", size=10)
     pdf.cell(40, 8, "Name : ", ln=0, align="L")
+    pdf.set_text_color(0, 0, 0)
+    pdf.set_font("Arial", "B", size=10)
     pdf.cell(20, 8, request.session.get('name'), ln=1, align="L")
+
+    pdf.set_text_color(100, 100, 100)
+    pdf.set_font("Arial", size=10)
     pdf.cell(40, 8, "Address : ", ln=0, align="L")
+    pdf.set_text_color(0, 0, 0)
+    pdf.set_font("Arial", "B", size=10)
     pdf.cell(20, 8, request.session.get('location'), ln=1, align="L")
+
+    pdf.set_text_color(100, 100, 100)
+    pdf.set_font("Arial", size=10)
     pdf.cell(40, 8, "Contact No. : ", ln=0, align="L")
+    pdf.set_text_color(0, 0, 0)
+    pdf.set_font("Arial", "B", size=10)
     pdf.cell(20, 8, request.session.get('phone'), ln=1, align="L")
+
+
 
     pdf.multi_cell(0, 10, "", align="L")
 
-    pdf.set_fill_color(255, 255, 255)
-    pdf.cell(190, 10, ln=1, border="L"+"T"+"R", fill=1)
-    pdf.cell(190, 10, " Kitchendotcom", ln=1, border="L"+"R", align="L")
-    pdf.cell(40, 10, " Address : ", ln=0, border="L", align="L", fill=1)
-    pdf.cell(150, 10, "D65/245 Lahartara , Varanasi",
-             ln=1, border="R", align="L", fill=1)
-    pdf.cell(40, 10, " Date : ", ln=0, border="L"+"B", align="L")
-    pdf.cell(150, 10, str(date), ln=1, border="B"+"R", align="L")
-
-    pdf.set_font("Arial", size=15)
-    pdf.cell(190, 20, "Quotation", ln=1, align="C")
+    pdf.set_fill_color(252, 234, 196)
+    pdf.cell(190, 10, " Kitchendotcom", ln=1, border="L"+"T"+"R", align="L", fill=1)
 
     pdf.set_font("Arial", size=10)
-    pdf.cell(30, 15, "Sr.No.", ln=0, border="L"+"T", align="C", fill=1)
-    pdf.cell(40, 15, "Particulars", ln=0, border="T", align="L", fill=1)
-    pdf.cell(40, 15, "Rate", ln=0, border="T", align="L", fill=1)
-    pdf.cell(40, 15, "Sqft.", ln=0, border="T", align="L", fill=1)
-    pdf.cell(40, 15, "Amount", ln=1, border="T"+"R", align="L", fill=1)
+    pdf.cell(40, 10, " Address : ", ln=0, border="L", align="L", fill=0)
+    pdf.cell(150, 10, "D65/245 Lahartara , Varanasi",
+             ln=1, border="R", align="L", fill=0)
+    pdf.cell(40, 10, " Date : ", ln=0, border="L"+"B", align="L", fill=1)
+    pdf.cell(150, 10, str(date), ln=1, border="B"+"R", align="L", fill=1)
+
+    pdf.set_font("Arial", "B", size=15)
+    pdf.cell(190, 20, "Quotation", ln=1, align="C")
+
+    pdf.set_font("Arial", "B", size=10)
+
+    pdf.cell(30, 15, "Sr.No.", ln=0, border="L"+"T", align="C", fill=0)
+    pdf.cell(40, 15, "Particulars", ln=0, border="T", align="L", fill=0)
+    pdf.cell(40, 15, "Rate", ln=0, border="T", align="L", fill=0)
+    pdf.cell(40, 15, "Sqft.", ln=0, border="T", align="L", fill=0)
+    pdf.cell(40, 15, "Amount", ln=1, border="T"+"R", align="L", fill=0)
+
+    pdf.set_font("Arial", size=10)
+
     pdf.cell(30, 10, "1.", ln=0, border="L", align="C", fill=1)
     pdf.cell(40, 10, "Plan Deisgning", ln=0, border="", align="L", fill=1)
     pdf.cell(40, 10, str(3*pdf_variable), ln=0, border="", align="L", fill=1)
     pdf.cell(40, 10, str(a+b+c), ln=0, border="", align="L", fill=1)
     pdf.cell(40, 10, str(round((a+b+c) * 3 * pdf_variable, 2)),
              ln=1, border="R", align="L", fill=1)
+
     # pdf.set_fill_color(0,102,101)
     pdf.cell(30, 10, "2.", ln=0, border="L", align="C")
     pdf.cell(40, 10, "Loft", ln=0, border="", align="L")
@@ -407,16 +438,16 @@ def kitchen_summary(request):
     pdf.cell(40, 10, str(a+b+c), ln=0, border="", align="L")
     pdf.cell(40, 10, str(round((l * pdf_variable * (a+b+c)), 2)),
              ln=1, border="R", align="L")
-    pdf.set_fill_color(255, 255, 255)
+
     pdf.cell(190, 10, "", ln=1, border="L"+"R", align="C", fill=1)
     # pdf.set_fill_color(0,102,101)
     pdf.cell(190, 10, "", ln=1, border="L"+"R", align="C")
-    pdf.set_fill_color(255, 255, 255)
-    pdf.cell(10, 20, "", ln=0, border="L"+"B", fill=1)
-    pdf.cell(140, 20, "Total", ln=0, border="B", align="L", fill=1)
-    pdf.cell(40, 20, str(cal), ln=1, border="B"+"R", align="L", fill=1)
+    pdf.cell(10, 10, "", ln=0, border="L"+"B", fill=1)
+    pdf.cell(140, 10, "Total", ln=0, border="B", align="L", fill=1)
+    pdf.cell(40, 10, str(cal), ln=1, border="B"+"R", align="L", fill=1)
 
     pdf.multi_cell(0, 5, "", align="L")
+    pdf.set_font("Arial", "b", size=10)
     pdf.cell(200, 6, "Terms & Conditions :-", ln=1, align="L")
     pdf.set_font("Arial", size=8)
     pdf.cell(
@@ -428,89 +459,134 @@ def kitchen_summary(request):
     pdf.cell(200, 4, "5. Appliances and Services(Ceiling light, Civil work,Plumbing and Flooring) are not counted in above quotaion i.e. it will be quoted as per selection", ln=1, align="L")
     pdf.cell(
         200, 4, "6. Payment Schedule as prescribed by area manager.", ln=1, align="L")
+    
+    pdf.image(os.path.join(settings.BASE_DIR, "home", "bg",
+              "bottom.png"), 0, 228, 210, 70, 'png')  # Background imag
+
+
 
     pdf.add_page()
+    pdf.image(os.path.join(settings.BASE_DIR, "home", "bg",
+              "page2.png"), 0, 0, 210, 70, 'png')  # Background image
+    # pdf.image("static/pdf/Group.png", 100, 10)  # logo
+
+    pdf.image(os.path.join(settings.BASE_DIR, "home", "bg",
+              "logo.png"), 30, 23)  # Background image
+    pdf.set_text_color(255, 255, 255)
+    pdf.set_font("Arial", size=25)
+    pdf.ln(11)
+    pdf.cell(190, 40, "Kitchendotcom", ln=1, align="L")
+    pdf.ln(18)
+
+
     ##pdf.image("static/pdf/bg_2.png", 0, 0, 210, 297, 'png')
-    pdf.set_font("Arial", size=15)
+    pdf.set_font("Arial", "B", size=15)
     pdf.set_text_color(0, 0, 0)
     pdf.cell(190, 15, "Summary", ln=1, align="C")
 
-    pdf.set_font("Arial", size=10)
+    pdf.set_font("Arial", "B", size=10)
     pdf.cell(10, 15, "", ln=0, border="L"+"T", fill=1)
     pdf.cell(50, 15, "Sr.No.", ln=0, border="T", align="L", fill=1)
     pdf.cell(130, 15, "Particulars", ln=1, border="T"+"R", align="L", fill=1)
-    pdf.cell(30, 10, "1.", ln=0, border="L", align="C", fill=1)
-    pdf.cell(80, 10, "Shape", ln=0, border="", align="C", fill=1)
-    pdf.cell(80, 10, request.session.get('layout'),
-             ln=1, border="R", align="C", fill=1)
-    # pdf.set_fill_color(0, 102, 101)
-    pdf.cell(30, 10, "2.", ln=0, border="L", align="C")
-    pdf.cell(80, 10, "Size", ln=0, border="", align="C")
-    pdf.cell(80, 10, str(a+b+c), ln=1, border="R", align="C")
-    pdf.set_fill_color(255, 255, 255)
-    pdf.cell(30, 10, "3.", ln=0, border="L", align="C", fill=1)
-    pdf.cell(80, 10, "Type", ln=0, border="", align="C", fill=1)
-    pdf.cell(80, 10, request.session.get('package'),
-             ln=1, border="R", align="C", fill=1)
-    # pdf.set_fill_color(0, 102, 101)
-    pdf.cell(30, 10, "4.", ln=0, border="L", align="C")
-    pdf.cell(80, 10, "Material", ln=0, border="", align="C")
-    pdf.cell(80, 10, request.session.get(
-        'material'), ln=1, border="R", align="C")
-    pdf.set_fill_color(255, 255, 255)
-    pdf.cell(30, 10, "5.", ln=0, border="L", align="C", fill=1)
-    pdf.cell(80, 10, "Countertop", ln=0, border="", align="C", fill=1)
-    pdf.cell(80, 10, 'No',
-             ln=1, border="R", align="C", fill=1)
-    # pdf.set_fill_color(0, 102, 101)
-    pdf.cell(30, 10, "6.", ln=0, border="L", align="C")
-    pdf.cell(80, 10, "Loft", ln=0, border="", align="C")
-    pdf.cell(80, 10, request.session.get('loft'), ln=1, border="R", align="C")
-    pdf.set_fill_color(255, 255, 255)
-    pdf.cell(30, 10, "7.", ln=0, border="L", align="C", fill=1)
-    pdf.cell(80, 10, "Finish", ln=0, border="", align="C", fill=1)
-    pdf.cell(80, 10, request.session.get('finish'),
-             ln=1, border="R", align="C", fill=1)
-    # pdf.set_fill_color(0, 102, 101)
-    pdf.cell(30, 10, "8.", ln=0, border="L", align="C")
-    pdf.cell(80, 10, "Accessories", ln=0, border="", align="C")
-    pdf.cell(80, 10, request.session.get(
-        'accessories'), ln=1, border="R", align="C")
-    pdf.set_fill_color(255, 255, 255)
-    pdf.cell(20, 20, "Total", ln=0, border="L"+"B", align="R", fill=1)
-    pdf.cell(135, 20, str(cal), ln=0, border="B", align="R", fill=1)
-    pdf.cell(35, 20, "", ln=1, border="B"+"R", align="C", fill=1)
 
-    pdf.set_font("Arial", size=15)
+
+    pdf.set_font("Arial", size=10)
+    pdf.cell(30, 10, "1.", ln=0, border="L", align="C", fill=0)
+    pdf.cell(80, 10, "Shape", ln=0, border="", align="C", fill=0)
+    pdf.cell(80, 10, request.session.get('layout'),
+             ln=1, border="R", align="C", fill=0)
+
+    pdf.cell(30, 10, "2.", ln=0, border="L", align="C", fill=1)
+    pdf.cell(80, 10, "Size", ln=0, border="", align="C", fill=1)
+    pdf.cell(80, 10, str(a+b+c), ln=1, border="R", align="C", fill=1)
+
+    pdf.cell(30, 10, "3.", ln=0, border="L", align="C", fill=0)
+    pdf.cell(80, 10, "Type", ln=0, border="", align="C", fill=0)
+    pdf.cell(80, 10, request.session.get('package'),
+             ln=1, border="R", align="C", fill=0)
+
+    # pdf.set_fill_color(0, 102, 101)
+    pdf.cell(30, 10, "4.", ln=0, border="L", align="C", fill=1)
+    pdf.cell(80, 10, "Material", ln=0, border="", align="C", fill=1)
+    pdf.cell(80, 10, request.session.get(
+        'material'), ln=1, border="R", align="C", fill=1)
+
+    pdf.cell(30, 10, "5.", ln=0, border="L", align="C", fill=0)
+    pdf.cell(80, 10, "Countertop", ln=0, border="", align="C", fill=0)
+    pdf.cell(80, 10, 'No',
+             ln=1, border="R", align="C", fill=0)
+
+    # pdf.set_fill_color(0, 102, 101)
+    pdf.cell(30, 10, "6.", ln=0, border="L", align="C", fill=1)
+    pdf.cell(80, 10, "Loft", ln=0, border="", align="C", fill=1)
+    pdf.cell(80, 10, request.session.get('loft'), ln=1, border="R", align="C", fill=1)
+
+
+    pdf.cell(30, 10, "7.", ln=0, border="L", align="C", fill=0)
+    pdf.cell(80, 10, "Finish", ln=0, border="", align="C", fill=0)
+    pdf.cell(80, 10, request.session.get('finish'),
+             ln=1, border="R", align="C", fill=0)
+    # pdf.set_fill_color(0, 102, 101)
+
+
+    pdf.cell(30, 10, "8.", ln=0, border="L", align="C", fill=1)
+    pdf.cell(80, 10, "Accessories", ln=0, border="", align="C", fill=1)
+    pdf.cell(80, 10, request.session.get(
+        'accessories'), ln=1, border="R", align="C", fill=1)
+
+
+    pdf.set_font("Arial", "B", size=10)
+    pdf.cell(20, 20, "Total", ln=0, border="L"+"B", align="R", fill=0)
+    pdf.cell(135, 20, str(cal), ln=0, border="B", align="R", fill=0)
+    pdf.cell(35, 20, "", ln=1, border="B"+"R", align="C", fill=0)
+
+    pdf.image(os.path.join(settings.BASE_DIR, "home", "bg",
+              "bottom.png"), 0, 228, 210, 70, 'png')  # Background imag
+
+    pdf.add_page()
+    pdf.image(os.path.join(settings.BASE_DIR, "home", "bg",
+              "page2.png"), 0, 0, 210, 70, 'png')  # Background image
+    # pdf.image("static/pdf/Group.png", 100, 10)  # logo
+
+    pdf.image(os.path.join(settings.BASE_DIR, "home", "bg",
+              "logo.png"), 30, 23)  # Background image
+    pdf.set_text_color(255, 255, 255)
+    pdf.set_font("Arial", size=25)
+    pdf.ln(11)
+    pdf.cell(190, 40, "Kitchendotcom", ln=1, align="L")
+    pdf.ln(18)
+
+    pdf.set_font("Arial", "B", size=15)
     pdf.set_text_color(0, 0, 0)
     pdf.cell(190, 20, "Payment Schedule", ln=1, align="C")
-    pdf.set_font("Arial", size=10)
-    pdf.cell(35, 15, "  Sr.No.", ln=0, border="L"+"T", align="L", fill=1)
-    pdf.cell(35, 15, "Date/Day", ln=0, border="T", align="L", fill=1)
-    pdf.cell(35, 15, "Paid By", ln=0, border="T", align="L", fill=1)
-    pdf.cell(35, 15, "Amount", ln=0, border="T", align="L", fill=1)
+    pdf.set_font("Arial", "B", size=10)
+    pdf.cell(35, 15, "  Sr.No.", ln=0, border="L"+"T", align="L")
+    pdf.cell(35, 15, "Date/Day", ln=0, border="T", align="L")
+    pdf.cell(35, 15, "Paid By", ln=0, border="T", align="L")
+    pdf.cell(35, 15, "Amount", ln=0, border="T", align="L")
     pdf.cell(50, 15, "Mode of Payment", ln=1,
-             border="T"+"R", align="L", fill=1)
+             border="T"+"R", align="L")
+
+    pdf.set_font("Arial", size=10)
     pdf.multi_cell(190, 10, "   1.", border="L"+"R", fill=1)
     # pdf.set_fill_color(0, 102, 101)
     pdf.multi_cell(190, 10, "   2.", border="L"+"R")
-    pdf.set_fill_color(255, 255, 255)
     pdf.multi_cell(190, 10, "   3.", border="L"+"R", fill=1)
     # pdf.set_fill_color(0, 102, 101)
     pdf.multi_cell(190, 10, "   4.", border="L"+"R")
-    pdf.set_fill_color(255, 255, 255)
     pdf.multi_cell(190, 10, "   5.", border="L"+"R", fill=1)
     # pdf.set_fill_color(0, 102, 101)
     pdf.multi_cell(190, 10, "   6.", border="L"+"R")
-    pdf.set_fill_color(255, 255, 255)
     pdf.multi_cell(190, 10, "   7.", border="L"+"R", fill=1)
     # pdf.set_fill_color(0, 132, 153)
     pdf.multi_cell(190, 10, "   8.", border="L"+"R")
-    pdf.set_fill_color(255, 255, 255)
     pdf.cell(190, 10, ln=1, border="L"+"B"+"R", fill=1)
     # Rows
     pdf.set_text_color(128, 128, 128)
-    pdf.cell(200, 10, "www.kitchendotcom", ln=0, align="C")
+    pdf.cell(200, 10, "www.kitchendotcom.in", ln=0, align="C")
+
+    pdf.image(os.path.join(settings.BASE_DIR, "home", "bg",
+              "bottom.png"), 0, 228, 210, 70, 'png')  # Background imag
 
     # request.session.session_key
     # request.session.get('name')
@@ -533,6 +609,7 @@ def kitchen_summary(request):
     return JsonResponse({
         'data': context
     })
+
 
 def summary_download(request):
 
