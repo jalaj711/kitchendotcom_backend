@@ -38,12 +38,13 @@ rate = {
 def contact_us(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        name = data.get('first_name') + " " + data.get('last_name')
-        email = data.get('email')
+        name = data.get('first_name') + " " + (data.get('last_name', '') or "")
+        email = data.get('email', '')
         location = data.get('city')
         message = data.get('message')
+        phone = data.get('phone')
         details = c_details(name=name, email=email,
-                            location=location, message=message)
+                            location=location, message=message, phone=phone)
         details.save()
         return JsonResponse({
             'success': True
