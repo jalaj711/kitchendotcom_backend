@@ -4,3 +4,4 @@ media/
 **/__init__/
 **/__pycache__/
 static/
+staticfiles
