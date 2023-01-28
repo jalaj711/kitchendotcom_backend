@@ -29,8 +29,8 @@ admin.site.index_title = "Welcome to Kitchendotcom Portal"
 urlpatterns = [
     path('', include('templates_app.urls')),
     path('backend/', include('home.urls')),
-    #path('jet/', include('jet.urls', 'jet')),
-    #path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
+    path('jet/', include('jet.urls', 'jet')),
+    path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     path('admin/', admin.site.urls),
     path('backend/projects/', include('project.urls')),
     path('backend/blogandnews/', include('blogandnews.urls')),
